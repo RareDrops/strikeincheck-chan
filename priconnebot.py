@@ -26,9 +26,15 @@ async def on_ready():
 @client.command()
 async def get_reactions(ctx, message_id):
     #fetching the members with a specific role
-    with open("priconne_data.json",'r') as in_file:
-        data = json.load(in_file)
-        in_file.close()
+    try:
+        with open("priconne_data.json",'r') as in_file:
+            data = json.load(in_file)
+            in_file.close()
+    except (KeyError, FileNotFoundError):
+        await ctx.send("Set the clan role first by using !set_role command, check !help for the documentation.")
+    except discord.NotFound:
+        await ctx.send("The argument is not a message id.")
+
     guild = ctx.guild
     role = guild.get_role(data[str(guild.id)])
     member_list = role.members
@@ -86,4 +92,4 @@ async def help(ctx):
 
 
 
-client.run("OTEzODEzOTgyMzIwNjg5MTYy.YaD9lw.2KJdva5FfWKb0a0Bi1pTM2iLAzw")
+client.run("PUT YOUR TOKEN HERE")
