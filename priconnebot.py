@@ -37,12 +37,13 @@ async def get_reactions(ctx, message_id):
         await ctx.send("The argument is not a message id.")
 
     guild = ctx.guild
-    role = guild.get_role(data[str(guild.id)])
+    channel = guild.get_channel(data[str(guild.id)]["channel"])
+    role = guild.get_role(data[str(guild.id)]["role"])
     member_list = role.members
     member_dictionary = {member.id:member.name for member in member_list}
 
     #fetching the members that reacted to a specific message by the message id
-    message = await ctx.fetch_message(message_id)
+    message = await channel.fetch_message(message_id)
     for reaction in message.reactions:
         reaction_user_list = await reaction.users().flatten()
         reaction_user_dictionary = {member.id:member.name for member in reaction_user_list}
