@@ -127,4 +127,4 @@ async def help(ctx):
 
 
 
-client.run("OTEzODEzOTgyMzIwNjg5MTYy.YaD9lw.ingOvE_smCKXFfFESgQbjDK7MUQ")
+client.run("PUT YOUR TOKEN HERE")
