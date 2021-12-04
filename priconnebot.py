@@ -1,3 +1,4 @@
+from json.decoder import JSONDecodeError
 from logging import info
 import discord
 from discord.ext import commands, tasks
@@ -57,12 +58,42 @@ async def set_role(ctx, role):
     try:
         role = int(role)
     except ValueError:
-        await ctx.send("You need to put a role id as the argument. To get the role id, you need to have developer options enable and right click the role then copy id. Example: h!set_role 378216273513297321")
+        await ctx.send("You need to put a role id as the argument. To get the role id, you need to have developer options enabled and right click the role then copy id. Example: !set_role 378216273513297321")
     guild = ctx.guild.id
-    guild_role_dict = {guild:role}
+    #checks if the json file is empty or can't be found, exception will be raised and altenative solution will take action
+    try:
+        with open("priconne_data.json",'r') as in_file:
+            data = json.load(in_file)
+            in_file.close()
+        data[str(ctx.guild.id)]["role"] = role
+        guild_role_dict = data
+    except (FileNotFoundError, JSONDecodeError):
+        guild_role_dict = {guild:{"role":role}}
     with open("priconne_data.json",'w') as out_file:
         json.dump(guild_role_dict,out_file,indent=4)
         out_file.close()
+    await ctx.send("Successfully sets the clan role.")
+
+@client.command()
+async def set_channel(ctx, channel):
+    try:
+        channel = int(channel)
+    except ValueError:
+         await ctx.send("You need to put a channel id as the argument. To get the channel id, you need to have developer options enabled and right click the channel then copy id. Example: !set_channel 378216273513297321")
+    guild = ctx.guild.id
+    #checks if the json file is empty or can't be found, exception will be raised and altenative solution will take action
+    try:
+        with open("priconne_data.json",'r') as in_file:
+            data = json.load(in_file)
+            in_file.close()
+        data[str(ctx.guild.id)]["channel"] = channel
+        guild_channel_dict = data
+    except (FileNotFoundError, JSONDecodeError):
+        guild_channel_dict = {guild:{"channel":channel}}
+    with open("priconne_data.json",'w') as out_file:
+        json.dump(guild_channel_dict,out_file,indent=4)
+        out_file.close()
+    await ctx.send(f"Successfully sets the strike-in channel to <#{channel}>.")
 
 @client.command()
 async def help(ctx):
@@ -72,6 +103,10 @@ async def help(ctx):
     embed.add_field(
             name="!set_role [role id]",
             value="Sets your clan's role. Example: !set_role 987312632817318312",
+            inline=False)
+    embed.add_field(
+            name="!set_channel [channel id]",
+            value="Set the channel strike-ins. Example: !set_channel 2727321987312612136",
             inline=False)
     embed.add_field(
             name="!get_reactions [message id]",
@@ -92,4 +127,4 @@ async def help(ctx):
 
 
 
-client.run("PUT YOUR TOKEN HERE")
+client.run("OTEzODEzOTgyMzIwNjg5MTYy.YaD9lw.ingOvE_smCKXFfFESgQbjDK7MUQ")
