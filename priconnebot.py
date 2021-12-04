@@ -31,8 +31,8 @@ async def get_reactions(ctx, message_id):
         with open("priconne_data.json",'r') as in_file:
             data = json.load(in_file)
             in_file.close()
-    except (KeyError, FileNotFoundError):
-        await ctx.send("Set the clan role first by using !set_role command, check !help for the documentation.")
+    except (KeyError, FileNotFoundError, JSONDecodeError):
+        await ctx.send("Set the clan role and strike-in channel first by using !set_role and !set_channel command, check !help for the documentation.")
     except discord.NotFound:
         await ctx.send("The argument is not a message id.")
 
